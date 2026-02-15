@@ -1,12 +1,33 @@
 #!/usr/bin/env python3
 """Auto-update README.md and studyplan.md based on solution directories."""
 
+import json
 import os
 import re
+import sys
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 STUDYPLAN = os.path.join(ROOT, "studyplan.md")
 README = os.path.join(ROOT, "README.md")
+PROBLEM_CACHE = os.path.join(ROOT, ".problem-cache.json")
+
+# Priority-ordered: first match wins
+TOPIC_TAG_TO_PATTERN = [
+    ("Sliding Window", "Sliding Window"),
+    ("Prefix Sum", "Prefix Sum"),
+    ("Two Pointers", "Two Pointers"),
+    ("Monotonic Stack", "Monotonic Stack"),
+    ("Binary Search", "Binary Search"),
+    ("Dynamic Programming", "DP"),
+    ("Graph", "Graph"),
+    ("Tree", "Tree"),
+    ("Backtracking", "Backtracking"),
+    ("Heap (Priority Queue)", "Heap"),
+    ("Union Find", "Union Find"),
+    ("Trie", "Trie"),
+    ("Bit Manipulation", "Bit Manipulation"),
+    ("Math", "Math"),
+]
 
 PHASE_LABELS = {
     1: "Sliding Window",
@@ -79,6 +100,74 @@ def _phase_to_pattern(phase, sub):
             return "Trie"
         return "Bit Manipulation"
     return mapping.get(phase, "")
+
+
+def tags_to_pattern(topic_tags):
+    """Pick the most relevant pattern from LeetCode topic tags."""
+    tag_names = {t["name"] for t in topic_tags}
+    for tag, pattern in TOPIC_TAG_TO_PATTERN:
+        if tag in tag_names:
+            return pattern
+    return ""
+
+
+def load_cache():
+    """Load problem metadata cache from disk."""
+    if os.path.isfile(PROBLEM_CACHE):
+        with open(PROBLEM_CACHE) as f:
+            return json.load(f)
+    return {}
+
+
+def save_cache(cache):
+    """Write problem metadata cache to disk."""
+    with open(PROBLEM_CACHE, "w") as f:
+        json.dump(cache, f, indent=2, sort_keys=True)
+        f.write("\n")
+
+
+def resolve_metadata(solutions):
+    """Resolve difficulty + pattern for each solution via cache or LeetCode API.
+
+    Returns dict slug -> {difficulty, pattern, topicTags}.
+    """
+    # Import fetch_metadata from fetch-leetcode.py
+    sys.path.insert(0, ROOT)
+    from importlib import import_module
+    fetch_mod = import_module("fetch-leetcode")
+    fetch_metadata = fetch_mod.fetch_metadata
+
+    cache = load_cache()
+    problem_meta = {}
+    fetched = 0
+
+    for slug in solutions:
+        if slug in cache:
+            problem_meta[slug] = cache[slug]
+            continue
+
+        # Fetch from API
+        try:
+            q = fetch_metadata(slug)
+            topic_tags = q.get("topicTags", [])
+            entry = {
+                "difficulty": q.get("difficulty", ""),
+                "pattern": tags_to_pattern(topic_tags),
+                "topicTags": [t["name"] for t in topic_tags],
+            }
+            cache[slug] = entry
+            problem_meta[slug] = entry
+            fetched += 1
+            print(f"  Fetched: {slug}")
+        except Exception as e:
+            print(f"  Warning: could not fetch {slug}: {e}", file=sys.stderr)
+            problem_meta[slug] = {"difficulty": "", "pattern": "", "topicTags": []}
+
+    if fetched > 0:
+        save_cache(cache)
+        print(f"  Cached {fetched} new problem(s)")
+
+    return problem_meta
 
 
 def update_studyplan(solutions):
@@ -192,26 +281,8 @@ def make_progress_bar(solved, total, width=10):
     return "\u2588" * filled + "\u2591" * (width - filled)
 
 
-def parse_readme_table():
-    """Parse existing README solutions table for non-studyplan problem metadata."""
-    existing = {}
-    with open(README) as f:
-        for line in f:
-            m = re.match(
-                r"^\|\s*(\d+)\s*\|[^|]+\|\s*(\w*)\s*\|\s*([^|]*)\s*\|", line
-            )
-            if m:
-                existing[int(m.group(1))] = {
-                    "difficulty": m.group(2).strip(),
-                    "pattern": m.group(3).strip(),
-                }
-    return existing
-
-
-def update_readme(solutions, sp_meta, phase_counts, total_solved, total_all):
+def update_readme(solutions, problem_meta, phase_counts, total_solved, total_all):
     """Update README.md progress section and solutions table."""
-    existing_table = parse_readme_table()
-
     with open(README) as f:
         lines = f.readlines()
 
@@ -287,23 +358,14 @@ def update_readme(solutions, sp_meta, phase_counts, total_solved, total_all):
             )
             entries = []
             for slug, sol in solutions.items():
-                meta = sp_meta.get(slug, {})
-                number = meta.get("number", sol["number"])
-                title = meta.get("title", sol["title"])
-                difficulty = meta.get("difficulty", "")
-                pattern = meta.get("pattern", "")
-                # Fallback to existing README data for non-studyplan problems
-                if not difficulty and number in existing_table:
-                    difficulty = existing_table[number].get("difficulty", "")
-                if not pattern and number in existing_table:
-                    pattern = existing_table[number].get("pattern", "")
+                meta = problem_meta.get(slug, {})
                 entries.append(
                     {
-                        "number": number,
-                        "title": title,
+                        "number": sol["number"],
+                        "title": sol["title"],
                         "url": sol["url"],
-                        "difficulty": difficulty,
-                        "pattern": pattern,
+                        "difficulty": meta.get("difficulty", ""),
+                        "pattern": meta.get("pattern", ""),
                         "dir": sol["dir"],
                     }
                 )
@@ -326,8 +388,9 @@ def update_readme(solutions, sp_meta, phase_counts, total_solved, total_all):
 
 def main():
     solutions = find_solutions()
+    problem_meta = resolve_metadata(solutions)
     sp_meta, phase_counts, total_solved, total_all = update_studyplan(solutions)
-    update_readme(solutions, sp_meta, phase_counts, total_solved, total_all)
+    update_readme(solutions, problem_meta, phase_counts, total_solved, total_all)
     print(
         f"Updated: {total_solved}/{total_all} studyplan problems solved, "
         f"{len(solutions)} total solutions"

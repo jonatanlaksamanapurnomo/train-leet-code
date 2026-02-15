@@ -16,12 +16,72 @@ def fetch_problem(slug):
         question(titleSlug: $titleSlug) {
             questionId
             title
+            difficulty
+            topicTags { name slug }
             content
             codeSnippets {
                 lang
                 code
             }
             exampleTestcases
+        }
+    }
+    """
+    payload = json.dumps({
+        "query": query,
+        "variables": {"titleSlug": slug}
+    }).encode("utf-8")
+
+    req = urllib.request.Request(
+        "https://leetcode.com/graphql",
+        data=payload,
+        headers={
+            "Content-Type": "application/json",
+            "Referer": f"https://leetcode.com/problems/{slug}/",
+            "User-Agent": "Mozilla/5.0",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+    return data["data"]["question"]
+
+
+def fetch_daily_slug():
+    """Fetch today's daily challenge problem slug from LeetCode."""
+    query = """
+    query questionOfToday {
+        activeDailyCodingChallengeQuestion {
+            date
+            link
+            question {
+                titleSlug
+            }
+        }
+    }
+    """
+    payload = json.dumps({"query": query}).encode("utf-8")
+
+    req = urllib.request.Request(
+        "https://leetcode.com/graphql",
+        data=payload,
+        headers={
+            "Content-Type": "application/json",
+            "Referer": "https://leetcode.com/",
+            "User-Agent": "Mozilla/5.0",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+    return data["data"]["activeDailyCodingChallengeQuestion"]["question"]["titleSlug"]
+
+
+def fetch_metadata(slug):
+    """Fetch lightweight metadata (difficulty + tags) from LeetCode GraphQL API."""
+    query = """
+    query questionMeta($titleSlug: String!) {
+        question(titleSlug: $titleSlug) {
+            difficulty
+            topicTags { name slug }
         }
     }
     """
@@ -591,7 +651,17 @@ def generate_java(slug, question):
 def main():
     if len(sys.argv) < 2:
         print("Usage: fetch-leetcode.py <problem-slug>", file=sys.stderr)
+        print("       fetch-leetcode.py --daily-slug", file=sys.stderr)
         sys.exit(1)
+
+    if sys.argv[1] == "--daily-slug":
+        try:
+            slug = fetch_daily_slug()
+            print(slug, end="")
+        except Exception as e:
+            print(f"Error fetching daily challenge: {e}", file=sys.stderr)
+            sys.exit(1)
+        return
 
     slug = sys.argv[1]
     try:

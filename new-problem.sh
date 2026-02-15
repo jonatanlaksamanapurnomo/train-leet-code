@@ -1,26 +1,39 @@
 #!/bin/bash
 
 # Usage: ./new-problem.sh <leetcode-url>
+#        ./new-problem.sh daily
 # Example: ./new-problem.sh https://leetcode.com/problems/two-sum/
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 if [ -z "$1" ]; then
     echo "Usage: ./new-problem.sh <leetcode-url>"
+    echo "       ./new-problem.sh daily"
     echo "Example: ./new-problem.sh https://leetcode.com/problems/two-sum/"
     exit 1
 fi
 
-URL="$1"
+if [ "$1" = "daily" ]; then
+    echo "Fetching today's daily challenge..."
+    SLUG=$(python3 "$SCRIPT_DIR/fetch-leetcode.py" --daily-slug 2>/dev/null)
+    if [ $? -ne 0 ] || [ -z "$SLUG" ]; then
+        echo "Error: Could not fetch daily challenge from LeetCode"
+        exit 1
+    fi
+    URL="https://leetcode.com/problems/$SLUG/"
+    echo "Daily challenge: $URL"
+else
+    URL="$1"
+    # Extract problem slug from URL (e.g., "two-sum" from "https://leetcode.com/problems/two-sum/")
+    SLUG=$(echo "$URL" | sed -E 's|.*/problems/([^/]+)/?.*|\1|')
 
-# Extract problem slug from URL (e.g., "two-sum" from "https://leetcode.com/problems/two-sum/")
-SLUG=$(echo "$URL" | sed -E 's|.*/problems/([^/]+)/?.*|\1|')
-
-if [ -z "$SLUG" ]; then
-    echo "Error: Could not extract problem name from URL"
-    exit 1
+    if [ -z "$SLUG" ]; then
+        echo "Error: Could not extract problem name from URL"
+        exit 1
+    fi
 fi
 
 FOLDER="$SLUG"
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # Check if folder already exists
 if [ -d "$FOLDER" ]; then

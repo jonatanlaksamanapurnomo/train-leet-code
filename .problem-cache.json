@@ -1,0 +1,57 @@
+{
+  "add-binary": {
+    "difficulty": "Easy",
+    "pattern": "Bit Manipulation",
+    "topicTags": [
+      "Math",
+      "String",
+      "Bit Manipulation",
+      "Simulation"
+    ]
+  },
+  "longest-substring-without-repeating-characters": {
+    "difficulty": "Medium",
+    "pattern": "Sliding Window",
+    "topicTags": [
+      "Hash Table",
+      "String",
+      "Sliding Window"
+    ]
+  },
+  "max-consecutive-ones-iii": {
+    "difficulty": "Medium",
+    "pattern": "Sliding Window",
+    "topicTags": [
+      "Array",
+      "Binary Search",
+      "Sliding Window",
+      "Prefix Sum"
+    ]
+  },
+  "maximum-average-subarray-i": {
+    "difficulty": "Easy",
+    "pattern": "Sliding Window",
+    "topicTags": [
+      "Array",
+      "Sliding Window"
+    ]
+  },
+  "maximum-number-of-vowels-in-a-substring-of-given-length": {
+    "difficulty": "Medium",
+    "pattern": "Sliding Window",
+    "topicTags": [
+      "String",
+      "Sliding Window"
+    ]
+  },
+  "minimum-size-subarray-sum": {
+    "difficulty": "Medium",
+    "pattern": "Sliding Window",
+    "topicTags": [
+      "Array",
+      "Binary Search",
+      "Sliding Window",
+      "Prefix Sum"
+    ]
+  }
+}
