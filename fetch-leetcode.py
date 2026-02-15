@@ -292,17 +292,49 @@ def needs_list_import(ret_type, params):
     return any("List<" in t for t in all_types)
 
 
-def build_print_wrapper(ret_type, call_expr):
-    """Build the System.out.println statement with appropriate wrapper."""
+def build_comparison(ret_type, result_var, expected_var):
+    """Build Java comparison expression based on return type."""
     if "[][]" in ret_type:
-        return f"System.out.println(Arrays.deepToString({call_expr}));"
+        return f"Arrays.deepEquals({result_var}, {expected_var})"
     if "[]" in ret_type:
-        return f"System.out.println(Arrays.toString({call_expr}));"
-    return f"System.out.println({call_expr});"
+        return f"Arrays.equals({result_var}, {expected_var})"
+    if ret_type == "String" or "List<" in ret_type:
+        return f"{result_var}.equals({expected_var})"
+    if ret_type in ("double", "float"):
+        return f"Math.abs({result_var} - {expected_var}) < 1e-5"
+    # primitives: int, long, boolean, char
+    return f"{result_var} == {expected_var}"
+
+
+def build_display(ret_type, var):
+    """Build Java expression to display a value as string."""
+    if "[][]" in ret_type:
+        return f"Arrays.deepToString({var})"
+    if "[]" in ret_type:
+        return f"Arrays.toString({var})"
+    return var
+
+
+def _emit_judge(lines, idx, ret_type, result_var, expected_val):
+    """Emit PASS/FAIL judge block for a test case."""
+    n = idx + 1
+    lines.append(f"        {ret_type} expected{n} = {expected_val};")
+    comp = build_comparison(ret_type, result_var, f"expected{n}")
+    disp_r = build_display(ret_type, result_var)
+    disp_e = build_display(ret_type, f"expected{n}")
+    lines.append(f"        if ({comp}) {{")
+    lines.append(f'            System.out.println("Test {n}: PASS");')
+    lines.append(f"            passed++;")
+    lines.append(f"        }} else {{")
+    lines.append(
+        f'            System.out.println("Test {n}: FAIL'
+        f' (expected: " + {disp_e} + ", got: " + {disp_r} + ")");'
+    )
+    lines.append(f"        }}")
 
 
 def generate_java(slug, question):
-    """Generate complete Main.java content."""
+    """Generate Main.java with judge-style PASS/FAIL test output."""
     qid = question["questionId"]
     title = question["title"]
     html = question["content"]
@@ -346,6 +378,8 @@ def generate_java(slug, question):
     if use_list:
         imports.append("import java.util.List;")
 
+    is_void = ret_type == "void"
+
     # Build output lines
     lines = []
     lines.append(f"// {qid}. {title}")
@@ -355,49 +389,44 @@ def generate_java(slug, question):
         lines.append(imp)
     if imports:
         lines.append("")
-    # Solution class from LeetCode
     lines.append(java_code.rstrip())
     lines.append("")
     lines.append("public class Main {")
     lines.append("    public static void main(String[] args) {")
     lines.append("        Solution solution = new Solution();")
-
-    is_void = ret_type == "void"
+    lines.append("        int passed = 0;")
+    lines.append("        int total = 0;")
 
     for idx, tc in enumerate(test_cases):
+        n = idx + 1
+        has_expected = idx < len(outputs)
         lines.append("")
+
         # Build comment
         param_strs = []
         for j, (ptype, pname) in enumerate(params):
             param_strs.append(f"{pname} = {tc[j]}")
         comment_parts = ", ".join(param_strs)
-        if idx < len(outputs):
-            comment = f"// Example {idx + 1}: {comment_parts} -> Output: {outputs[idx]}"
+        if has_expected:
+            comment = f"// Test {n}: {comment_parts} -> Expected: {outputs[idx]}"
         else:
-            comment = f"// Example {idx + 1}: {comment_parts}"
+            comment = f"// Test {n}: {comment_parts}"
         lines.append(f"        {comment}")
-
-        # Build method call arguments
-        args = []
-        for j, (ptype, pname) in enumerate(params):
-            args.append(convert_value(tc[j], ptype))
-        args_str = ", ".join(args)
+        lines.append("        total++;")
 
         if is_void:
-            # For void methods: declare variable for first array param, call, then print
-            # Find first array/list param to print after mutation
-            print_param = None
+            # For void methods: declare first array param, call, compare mutated param
+            mutated_param = None
             decl_lines = []
             call_args = []
             for j, (ptype, pname) in enumerate(params):
                 converted = convert_value(tc[j], ptype)
-                if "[]" in ptype and print_param is None:
-                    # Declare as local variable
+                if "[]" in ptype and mutated_param is None:
                     decl_lines.append(
-                        f"        {ptype} {pname}{idx + 1} = {converted};"
+                        f"        {ptype} {pname}{n} = {converted};"
                     )
-                    call_args.append(f"{pname}{idx + 1}")
-                    print_param = (ptype, f"{pname}{idx + 1}")
+                    call_args.append(f"{pname}{n}")
+                    mutated_param = (ptype, f"{pname}{n}")
                 else:
                     call_args.append(converted)
             for dl in decl_lines:
@@ -406,15 +435,38 @@ def generate_java(slug, question):
             lines.append(
                 f"        solution.{method_name}({call_args_str});"
             )
-            if print_param:
-                ptype, var_name = print_param
+            if mutated_param and has_expected:
+                ptype, var_name = mutated_param
+                expected_val = convert_value(outputs[idx], ptype)
+                _emit_judge(lines, idx, ptype, var_name, expected_val)
+            elif mutated_param:
+                ptype, var_name = mutated_param
+                disp = build_display(ptype, var_name)
                 lines.append(
-                    f"        {build_print_wrapper(ptype, var_name)}"
+                    f'        System.out.println("Test {n}: " + {disp});'
                 )
         else:
+            # Non-void: store result, compare with expected
+            call_args = []
+            for j, (ptype, pname) in enumerate(params):
+                call_args.append(convert_value(tc[j], ptype))
+            args_str = ", ".join(call_args)
             call_expr = f"solution.{method_name}({args_str})"
-            lines.append(f"        {build_print_wrapper(ret_type, call_expr)}")
 
+            lines.append(
+                f"        {ret_type} result{n} = {call_expr};"
+            )
+            if has_expected:
+                expected_val = convert_value(outputs[idx], ret_type)
+                _emit_judge(lines, idx, ret_type, f"result{n}", expected_val)
+            else:
+                disp = build_display(ret_type, f"result{n}")
+                lines.append(
+                    f'        System.out.println("Test {n}: " + {disp});'
+                )
+
+    lines.append("")
+    lines.append('        System.out.println("\\n" + passed + "/" + total + " tests passed.");')
     lines.append("    }")
     lines.append("}")
     lines.append("")

@@ -26,7 +26,7 @@ Pahami dulu kapan dan kenapa sliding window works.
 
 **Konsep:** Window fixed size, geser dari kiri ke kanan. Tidak perlu shrink/expand — cukup slide.
 
-- [ ] **643. Maximum Average Subarray I** (Easy) — window fixed size, cari max average
+- [x] **643. Maximum Average Subarray I** (Easy) — window fixed size, cari max average
 - [ ] **1456. Maximum Number of Vowels in a Substring of Given Size** (Medium) — sama tapi track vowel count
 - [ ] **219. Contains Duplicate II** (Easy) — window fixed size, cek duplikat
 
@@ -40,7 +40,7 @@ Pahami dulu kapan dan kenapa sliding window works.
 
 - [x] **209. Minimum Size Subarray Sum** (Medium) — expand → sum pasti naik, shrink → sum pasti turun
 - [x] **3. Longest Substring Without Repeating Characters** (Medium) — expand → duplikat hanya bisa bertambah
-- [ ] **1004. Max Consecutive Ones III** (Medium) — expand → jumlah 0 hanya bisa bertambah
+- [x] **1004. Max Consecutive Ones III** (Medium) — expand → jumlah 0 hanya bisa bertambah
 - [ ] **904. Fruit Into Baskets** (Medium) — paling banyak 2 jenis buah di window
 - [ ] **424. Longest Repeating Character Replacement** (Medium) — tricky, pikirkan kenapa monotonic
 - [ ] **1358. Number of Substrings Containing All Three Characters** (Medium) — shrink saat sudah punya semua 3 karakter
@@ -75,7 +75,7 @@ Pahami kenapa sliding window gagal di sini, dan kenapa prefix works.
 
 - [ ] **930. Binary Subarrays With Sum** (Medium) — count subarray dengan sum tertentu
 - [ ] **1248. Count Number of Nice Subarrays** (Medium) — mirip tapi count odd numbers
-- [x] **3714. Longest Balanced Substring II** (Medium) — track selisih antar count karakter
+- [ ] **3714. Longest Balanced Substring II** (Medium) — track selisih antar count karakter
 - [ ] **1371. Find the Longest Substring Containing Vowels in Even Counts** (Medium) — prefix + bitmask
 
 > **Pertanyaan setelah solve:**
@@ -318,26 +318,26 @@ Untuk setiap soal, **jangan langsung code**. Ikuti flow ini:
 
 | Phase | Topic | Soal | Selesai |
 |-------|-------|------|---------|
-| 1 | Sliding Window (Fixed) | 3 | /3 |
-| 1 | Sliding Window (Dynamic) | 6 | 2/6 |
-| 2 | Prefix Sum Basic | 3 | /3 |
-| 2 | Prefix Sum Advanced | 4 | 1/4 |
-| 3 | Two Pointers | 4 | /4 |
-| 4 | Monotonic Stack | 4 | /4 |
-| 5 | Binary Search | 5 | /5 |
-| 6 | DP 1D | 5 | /5 |
-| 6 | DP 2D | 5 | /5 |
-| 6 | DP Patterns | 5 | /5 |
-| 7 | Graph Basic | 5 | /5 |
-| 7 | Graph Advanced | 4 | /4 |
-| 8 | Tree Basic | 5 | /5 |
-| 8 | Tree Advanced | 4 | /4 |
-| 9 | Backtracking | 5 | /5 |
-| 10 | Heap | 4 | /4 |
-| 11 | Union Find | 3 | /3 |
-| 11 | Trie | 3 | /3 |
-| 11 | Bit & Math | 4 | /4 |
-| **Total** | | **81** | **3/81** |
+| 1 | Sliding Window (Fixed) | 3 | 1/3 |
+| 1 | Sliding Window (Dynamic) | 6 | 3/6 |
+| 2 | Prefix Sum Basic | 3 | 0/3 |
+| 2 | Prefix Sum Advanced | 4 | 0/4 |
+| 3 | Two Pointers | 4 | 0/4 |
+| 4 | Monotonic Stack | 4 | 0/4 |
+| 5 | Binary Search | 5 | 0/5 |
+| 6 | DP 1D | 5 | 0/5 |
+| 6 | DP 2D | 5 | 0/5 |
+| 6 | DP Patterns | 5 | 0/5 |
+| 7 | Graph Basic | 5 | 0/5 |
+| 7 | Graph Advanced | 4 | 0/4 |
+| 8 | Tree Basic | 5 | 0/5 |
+| 8 | Tree Advanced | 4 | 0/4 |
+| 9 | Backtracking | 5 | 0/5 |
+| 10 | Heap | 4 | 0/4 |
+| 11 | Union Find | 3 | 0/3 |
+| 11 | Trie | 3 | 0/3 |
+| 11 | Bit & Math | 4 | 0/4 |
+| **Total** | | **81** | **4/81** |
 
 ---
 
