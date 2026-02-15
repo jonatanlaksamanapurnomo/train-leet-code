@@ -333,6 +333,30 @@ def _emit_judge(lines, idx, ret_type, result_var, expected_val):
     lines.append(f"        }}")
 
 
+def _emit_data_array(lines, arr_type, var_name, values, elem_type):
+    """Emit a Java array declaration, using multi-line format for complex types."""
+    is_generic = "List<" in elem_type
+    if is_generic:
+        lines.append(f'        @SuppressWarnings("unchecked")')
+        raw_type = re.sub(r'<[^>]+>', '', elem_type)
+        prefix = f"new {raw_type}[]"
+    else:
+        prefix = ""
+
+    inner = ", ".join(values)
+    single_line = f"        {arr_type} {var_name} = {prefix}{{{inner}}};"
+    use_multiline = len(single_line) > 100 or ("[]" in elem_type and len(values) > 1)
+
+    if use_multiline:
+        lines.append(f"        {arr_type} {var_name} = {prefix}{{")
+        for i, v in enumerate(values):
+            comma = "," if i < len(values) - 1 else ""
+            lines.append(f"            {v}{comma}")
+        lines.append(f"        }};")
+    else:
+        lines.append(single_line)
+
+
 def generate_java(slug, question):
     """Generate Main.java with judge-style PASS/FAIL test output."""
     qid = question["questionId"]
@@ -397,73 +421,163 @@ def generate_java(slug, question):
     lines.append("        int passed = 0;")
     lines.append("        int total = 0;")
 
-    for idx, tc in enumerate(test_cases):
-        n = idx + 1
-        has_expected = idx < len(outputs)
+    all_have_expected = len(outputs) >= len(test_cases) and len(test_cases) > 0
+
+    if all_have_expected:
+        # Loop-based test generation
         lines.append("")
 
-        # Build comment
-        param_strs = []
-        for j, (ptype, pname) in enumerate(params):
-            param_strs.append(f"{pname} = {tc[j]}")
-        comment_parts = ", ".join(param_strs)
-        if has_expected:
-            comment = f"// Test {n}: {comment_parts} -> Expected: {outputs[idx]}"
-        else:
-            comment = f"// Test {n}: {comment_parts}"
-        lines.append(f"        {comment}")
-        lines.append("        total++;")
-
         if is_void:
-            # For void methods: declare first array param, call, compare mutated param
-            mutated_param = None
-            decl_lines = []
-            call_args = []
+            # Identify the mutated array param
+            mutated_idx = None
             for j, (ptype, pname) in enumerate(params):
-                converted = convert_value(tc[j], ptype)
-                if "[]" in ptype and mutated_param is None:
-                    decl_lines.append(
-                        f"        {ptype} {pname}{n} = {converted};"
-                    )
-                    call_args.append(f"{pname}{n}")
-                    mutated_param = (ptype, f"{pname}{n}")
-                else:
-                    call_args.append(converted)
-            for dl in decl_lines:
-                lines.append(dl)
-            call_args_str = ", ".join(call_args)
-            lines.append(
-                f"        solution.{method_name}({call_args_str});"
-            )
-            if mutated_param and has_expected:
-                ptype, var_name = mutated_param
-                expected_val = convert_value(outputs[idx], ptype)
-                _emit_judge(lines, idx, ptype, var_name, expected_val)
-            elif mutated_param:
-                ptype, var_name = mutated_param
-                disp = build_display(ptype, var_name)
-                lines.append(
-                    f'        System.out.println("Test {n}: " + {disp});'
-                )
-        else:
-            # Non-void: store result, compare with expected
-            call_args = []
-            for j, (ptype, pname) in enumerate(params):
-                call_args.append(convert_value(tc[j], ptype))
-            args_str = ", ".join(call_args)
-            call_expr = f"solution.{method_name}({args_str})"
+                if "[]" in ptype:
+                    mutated_idx = j
+                    break
 
-            lines.append(
-                f"        {ret_type} result{n} = {call_expr};"
-            )
-            if has_expected:
-                expected_val = convert_value(outputs[idx], ret_type)
-                _emit_judge(lines, idx, ret_type, f"result{n}", expected_val)
+            # Declare data arrays for each parameter
+            for j, (ptype, pname) in enumerate(params):
+                values = [convert_value(tc[j], ptype) for tc in test_cases]
+                _emit_data_array(lines, ptype + "[]", pname + "Data", values, ptype)
+
+            # Declare expected data array
+            if mutated_idx is not None:
+                m_type = params[mutated_idx][0]
+                exp_values = [convert_value(outputs[idx], m_type) for idx in range(len(test_cases))]
+                _emit_data_array(lines, m_type + "[]", "expectedData", exp_values, m_type)
+
+            # For loop
+            first_pname = params[0][1]
+            lines.append("")
+            lines.append(f"        for (int i = 0; i < {first_pname}Data.length; i++) {{")
+            lines.append(f"            total++;")
+            call_args = [f"{pname}Data[i]" for _, pname in params]
+            args_str = ", ".join(call_args)
+            lines.append(f"            solution.{method_name}({args_str});")
+
+            if mutated_idx is not None:
+                m_type = params[mutated_idx][0]
+                m_name = params[mutated_idx][1]
+                m_var = f"{m_name}Data[i]"
+                comp = build_comparison(m_type, m_var, "expectedData[i]")
+                disp_r = build_display(m_type, m_var)
+                disp_e = build_display(m_type, "expectedData[i]")
             else:
-                disp = build_display(ret_type, f"result{n}")
+                comp = "false /* TODO: add comparison */"
+                disp_r = '"?"'
+                disp_e = '"?"'
+
+            lines.append(f"            if ({comp}) {{")
+            lines.append(f'                System.out.println("Test " + (i + 1) + ": PASS");')
+            lines.append(f"                passed++;")
+            lines.append(f"            }} else {{")
+            lines.append(
+                f'                System.out.println("Test " + (i + 1) + ": FAIL'
+                f' (expected: " + {disp_e} + ", got: " + {disp_r} + ")");'
+            )
+            lines.append(f"            }}")
+            lines.append(f"        }}")
+
+        else:
+            # Non-void method
+            # Declare data arrays for each parameter
+            for j, (ptype, pname) in enumerate(params):
+                values = [convert_value(tc[j], ptype) for tc in test_cases]
+                _emit_data_array(lines, ptype + "[]", pname + "Data", values, ptype)
+
+            # Declare expected data array
+            exp_values = [convert_value(outputs[idx], ret_type) for idx in range(len(test_cases))]
+            _emit_data_array(lines, ret_type + "[]", "expectedData", exp_values, ret_type)
+
+            # For loop
+            first_pname = params[0][1]
+            lines.append("")
+            lines.append(f"        for (int i = 0; i < {first_pname}Data.length; i++) {{")
+            lines.append(f"            total++;")
+            call_args = [f"{pname}Data[i]" for _, pname in params]
+            args_str = ", ".join(call_args)
+            lines.append(f"            {ret_type} result = solution.{method_name}({args_str});")
+
+            comp = build_comparison(ret_type, "result", "expectedData[i]")
+            disp_r = build_display(ret_type, "result")
+            disp_e = build_display(ret_type, "expectedData[i]")
+
+            lines.append(f"            if ({comp}) {{")
+            lines.append(f'                System.out.println("Test " + (i + 1) + ": PASS");')
+            lines.append(f"                passed++;")
+            lines.append(f"            }} else {{")
+            lines.append(
+                f'                System.out.println("Test " + (i + 1) + ": FAIL'
+                f' (expected: " + {disp_e} + ", got: " + {disp_r} + ")");'
+            )
+            lines.append(f"            }}")
+            lines.append(f"        }}")
+
+    else:
+        # Fallback: per-test-case generation when not all expected outputs are available
+        for idx, tc in enumerate(test_cases):
+            n = idx + 1
+            has_expected = idx < len(outputs)
+            lines.append("")
+
+            param_strs = []
+            for j, (ptype, pname) in enumerate(params):
+                param_strs.append(f"{pname} = {tc[j]}")
+            comment_parts = ", ".join(param_strs)
+            if has_expected:
+                comment = f"// Test {n}: {comment_parts} -> Expected: {outputs[idx]}"
+            else:
+                comment = f"// Test {n}: {comment_parts}"
+            lines.append(f"        {comment}")
+            lines.append("        total++;")
+
+            if is_void:
+                mutated_param = None
+                decl_lines = []
+                call_args = []
+                for j, (ptype, pname) in enumerate(params):
+                    converted = convert_value(tc[j], ptype)
+                    if "[]" in ptype and mutated_param is None:
+                        decl_lines.append(
+                            f"        {ptype} {pname}{n} = {converted};"
+                        )
+                        call_args.append(f"{pname}{n}")
+                        mutated_param = (ptype, f"{pname}{n}")
+                    else:
+                        call_args.append(converted)
+                for dl in decl_lines:
+                    lines.append(dl)
+                call_args_str = ", ".join(call_args)
                 lines.append(
-                    f'        System.out.println("Test {n}: " + {disp});'
+                    f"        solution.{method_name}({call_args_str});"
                 )
+                if mutated_param and has_expected:
+                    ptype, var_name = mutated_param
+                    expected_val = convert_value(outputs[idx], ptype)
+                    _emit_judge(lines, idx, ptype, var_name, expected_val)
+                elif mutated_param:
+                    ptype, var_name = mutated_param
+                    disp = build_display(ptype, var_name)
+                    lines.append(
+                        f'        System.out.println("Test {n}: " + {disp});'
+                    )
+            else:
+                call_args = []
+                for j, (ptype, pname) in enumerate(params):
+                    call_args.append(convert_value(tc[j], ptype))
+                args_str = ", ".join(call_args)
+                call_expr = f"solution.{method_name}({args_str})"
+                lines.append(
+                    f"        {ret_type} result{n} = {call_expr};"
+                )
+                if has_expected:
+                    expected_val = convert_value(outputs[idx], ret_type)
+                    _emit_judge(lines, idx, ret_type, f"result{n}", expected_val)
+                else:
+                    disp = build_display(ret_type, f"result{n}")
+                    lines.append(
+                        f'        System.out.println("Test {n}: " + {disp});'
+                    )
 
     lines.append("")
     lines.append('        System.out.println("\\n" + passed + "/" + total + " tests passed.");')
