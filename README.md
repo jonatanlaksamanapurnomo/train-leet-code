@@ -5,7 +5,7 @@ My journey solving 81 LeetCode problems, organized by pattern and topic — not 
 > **Philosophy:** Understand *why* an approach works, not memorize solutions.
 > For every problem, ask: "Is it monotonic or not? Why?"
 
-## Progress: 6 / 81 solved
+## Progress: 7 / 81 solved
 
 ```
 Phase 1  Sliding Window        ██████░░░░  5/9
@@ -27,6 +27,7 @@ Phase 11 Advanced (UF/Trie)    ░░░░░░░░░░  0/10
 |---|---------|------------|---------|----------|
 | 3 | [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) | Medium | Sliding Window | [Java](longest-substring-without-repeating-characters/src/Main.java) |
 | 67 | [Add Binary](https://leetcode.com/problems/add-binary/) | Easy | Bit Manipulation | [Java](add-binary/src/Main.java) |
+| 190 | [Reverse Bits](https://leetcode.com/problems/reverse-bits/) | Easy | Bit Manipulation | [Java](reverse-bits/src/Main.java) |
 | 209 | [Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/) | Medium | Sliding Window | [Java](minimum-size-subarray-sum/src/Main.java) |
 | 643 | [Maximum Average Subarray I](https://leetcode.com/problems/maximum-average-subarray-i/) | Easy | Sliding Window | [Java](maximum-average-subarray-i/src/Main.java) |
 | 1046 | [Max Consecutive Ones III](https://leetcode.com/problems/max-consecutive-ones-iii/) | Medium | Sliding Window | [Java](max-consecutive-ones-iii/src/Main.java) |

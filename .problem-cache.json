@@ -53,5 +53,13 @@
       "Sliding Window",
       "Prefix Sum"
     ]
+  },
+  "reverse-bits": {
+    "difficulty": "Easy",
+    "pattern": "Bit Manipulation",
+    "topicTags": [
+      "Divide and Conquer",
+      "Bit Manipulation"
+    ]
   }
 }
