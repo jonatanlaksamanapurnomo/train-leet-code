@@ -28,7 +28,7 @@ Pahami dulu kapan dan kenapa sliding window works.
 
 - [x] **643. Maximum Average Subarray I** (Easy) — window fixed size, cari max average
 - [x] **1456. Maximum Number of Vowels in a Substring of Given Length** (Medium) — sama tapi track vowel count
-- [ ] **219. Contains Duplicate II** (Easy) — window fixed size, cek duplikat
+- [x] **219. Contains Duplicate II** (Easy) — window fixed size, cek duplikat
 
 > **Pertanyaan setelah solve:**
 > - "Kenapa saya tidak perlu cek semua kemungkinan subarray?"
@@ -318,7 +318,7 @@ Untuk setiap soal, **jangan langsung code**. Ikuti flow ini:
 
 | Phase | Topic | Soal | Selesai |
 |-------|-------|------|---------|
-| 1 | Sliding Window (Fixed) | 3 | 2/3 |
+| 1 | Sliding Window (Fixed) | 3 | 3/3 |
 | 1 | Sliding Window (Dynamic) | 6 | 3/6 |
 | 2 | Prefix Sum Basic | 3 | 0/3 |
 | 2 | Prefix Sum Advanced | 4 | 0/4 |
@@ -337,7 +337,7 @@ Untuk setiap soal, **jangan langsung code**. Ikuti flow ini:
 | 11 | Union Find | 3 | 0/3 |
 | 11 | Trie | 3 | 0/3 |
 | 11 | Bit & Math | 4 | 0/4 |
-| **Total** | | **81** | **5/81** |
+| **Total** | | **81** | **6/81** |
 
 ---
 

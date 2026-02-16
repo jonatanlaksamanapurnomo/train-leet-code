@@ -9,6 +9,15 @@
       "Simulation"
     ]
   },
+  "contains-duplicate-ii": {
+    "difficulty": "Easy",
+    "pattern": "Sliding Window",
+    "topicTags": [
+      "Array",
+      "Hash Table",
+      "Sliding Window"
+    ]
+  },
   "longest-substring-without-repeating-characters": {
     "difficulty": "Medium",
     "pattern": "Sliding Window",
