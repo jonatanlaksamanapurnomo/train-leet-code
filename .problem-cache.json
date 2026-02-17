@@ -9,8 +9,25 @@
       "Simulation"
     ]
   },
+  "binary-watch": {
+    "difficulty": "Easy",
+    "pattern": "Backtracking",
+    "topicTags": [
+      "Backtracking",
+      "Bit Manipulation"
+    ]
+  },
   "contains-duplicate-ii": {
     "difficulty": "Easy",
+    "pattern": "Sliding Window",
+    "topicTags": [
+      "Array",
+      "Hash Table",
+      "Sliding Window"
+    ]
+  },
+  "fruit-into-baskets": {
+    "difficulty": "Medium",
     "pattern": "Sliding Window",
     "topicTags": [
       "Array",
