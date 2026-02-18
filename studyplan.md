@@ -42,7 +42,7 @@ Pahami dulu kapan dan kenapa sliding window works.
 - [x] **3. Longest Substring Without Repeating Characters** (Medium) — expand → duplikat hanya bisa bertambah
 - [x] **1004. Max Consecutive Ones III** (Medium) — expand → jumlah 0 hanya bisa bertambah
 - [x] **904. Fruit Into Baskets** (Medium) — paling banyak 2 jenis buah di window
-- [ ] **424. Longest Repeating Character Replacement** (Medium) — tricky, pikirkan kenapa monotonic
+- [x] **424. Longest Repeating Character Replacement** (Medium) — tricky, pikirkan kenapa monotonic
 - [ ] **1358. Number of Substrings Containing All Three Characters** (Medium) — shrink saat sudah punya semua 3 karakter
 
 > **Pertanyaan setelah solve:**
@@ -319,7 +319,7 @@ Untuk setiap soal, **jangan langsung code**. Ikuti flow ini:
 | Phase | Topic | Soal | Selesai |
 |-------|-------|------|---------|
 | 1 | Sliding Window (Fixed) | 3 | 3/3 |
-| 1 | Sliding Window (Dynamic) | 6 | 4/6 |
+| 1 | Sliding Window (Dynamic) | 6 | 5/6 |
 | 2 | Prefix Sum Basic | 3 | 0/3 |
 | 2 | Prefix Sum Advanced | 4 | 0/4 |
 | 3 | Two Pointers | 4 | 0/4 |
@@ -337,7 +337,7 @@ Untuk setiap soal, **jangan langsung code**. Ikuti flow ini:
 | 11 | Union Find | 3 | 0/3 |
 | 11 | Trie | 3 | 0/3 |
 | 11 | Bit & Math | 4 | 0/4 |
-| **Total** | | **81** | **7/81** |
+| **Total** | | **81** | **8/81** |
 
 ---
 

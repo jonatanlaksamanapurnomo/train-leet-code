@@ -42,6 +42,15 @@
       "Sliding Window"
     ]
   },
+  "longest-repeating-character-replacement": {
+    "difficulty": "Medium",
+    "pattern": "Sliding Window",
+    "topicTags": [
+      "Hash Table",
+      "String",
+      "Sliding Window"
+    ]
+  },
   "longest-substring-without-repeating-characters": {
     "difficulty": "Medium",
     "pattern": "Sliding Window",
