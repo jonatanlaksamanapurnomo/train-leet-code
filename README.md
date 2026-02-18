@@ -5,7 +5,7 @@ My journey solving 81 LeetCode problems, organized by pattern and topic — not 
 > **Philosophy:** Understand *why* an approach works, not memorize solutions.
 > For every problem, ask: "Is it monotonic or not? Why?"
 
-## Progress: 10 / 81 solved
+## Progress: 11 / 81 solved
 
 ```
 Phase 1  Sliding Window        ████████░░  7/9
@@ -32,6 +32,7 @@ Phase 11 Advanced (UF/Trie)    ░░░░░░░░░░  0/10
 | 219 | [Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii/) | Easy | Sliding Window | [Java](contains-duplicate-ii/src/Main.java) |
 | 401 | [Binary Watch](https://leetcode.com/problems/binary-watch/) | Easy | Backtracking | [Java](binary-watch/src/Main.java) |
 | 643 | [Maximum Average Subarray I](https://leetcode.com/problems/maximum-average-subarray-i/) | Easy | Sliding Window | [Java](maximum-average-subarray-i/src/Main.java) |
+| 693 | [Binary Number with Alternating Bits](https://leetcode.com/problems/binary-number-with-alternating-bits/) | Easy | Bit Manipulation | [Java](binary-number-with-alternating-bits/src/Main.java) |
 | 940 | [Fruit Into Baskets](https://leetcode.com/problems/fruit-into-baskets/) | Medium | Sliding Window | [Java](fruit-into-baskets/src/Main.java) |
 | 1046 | [Max Consecutive Ones III](https://leetcode.com/problems/max-consecutive-ones-iii/) | Medium | Sliding Window | [Java](max-consecutive-ones-iii/src/Main.java) |
 | 1567 | [Maximum Number of Vowels in a Substring of Given Length](https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/) | Medium | Sliding Window | [Java](maximum-number-of-vowels-in-a-substring-of-given-length/src/Main.java) |

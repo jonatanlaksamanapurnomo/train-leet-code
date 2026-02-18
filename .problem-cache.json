@@ -9,6 +9,13 @@
       "Simulation"
     ]
   },
+  "binary-number-with-alternating-bits": {
+    "difficulty": "Easy",
+    "pattern": "Bit Manipulation",
+    "topicTags": [
+      "Bit Manipulation"
+    ]
+  },
   "binary-watch": {
     "difficulty": "Easy",
     "pattern": "Backtracking",
