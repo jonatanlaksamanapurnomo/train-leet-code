@@ -33,6 +33,14 @@
       "Sliding Window"
     ]
   },
+  "count-binary-substrings": {
+    "difficulty": "Easy",
+    "pattern": "Two Pointers",
+    "topicTags": [
+      "Two Pointers",
+      "String"
+    ]
+  },
   "fruit-into-baskets": {
     "difficulty": "Medium",
     "pattern": "Sliding Window",
