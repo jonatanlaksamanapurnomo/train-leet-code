@@ -1,6 +1,6 @@
 // 67. Add Binary
 // https://leetcode.com/problems/add-binary/
-
+//test
 class Solution {
     public String addBinary(String a, String b) {
         int lastIdxA = a.length() - 1;
