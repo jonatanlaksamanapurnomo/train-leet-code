@@ -5,10 +5,10 @@ My journey solving 81 LeetCode problems, organized by pattern and topic — not 
 > **Philosophy:** Understand *why* an approach works, not memorize solutions.
 > For every problem, ask: "Is it monotonic or not? Why?"
 
-## Progress: 13 / 81 solved
+## Progress: 16 / 81 solved
 
 ```
-Phase 1  Sliding Window        █████████░  8/9
+Phase 1  Sliding Window        ██████████  9/9
 Phase 2  Prefix Sum + HashMap  ░░░░░░░░░░  0/7
 Phase 3  Two Pointers          ░░░░░░░░░░  0/4
 Phase 4  Monotonic Stack       ░░░░░░░░░░  0/4
@@ -35,8 +35,11 @@ Phase 11 Advanced (UF/Trie)    ░░░░░░░░░░  0/10
 | 643 | [Maximum Average Subarray I](https://leetcode.com/problems/maximum-average-subarray-i/) | Easy | Sliding Window | [Java](maximum-average-subarray-i/src/Main.java) |
 | 693 | [Binary Number with Alternating Bits](https://leetcode.com/problems/binary-number-with-alternating-bits/) | Easy | Bit Manipulation | [Java](binary-number-with-alternating-bits/src/Main.java) |
 | 696 | [Count Binary Substrings](https://leetcode.com/problems/count-binary-substrings/) | Easy | Two Pointers | [Java](count-binary-substrings/src/Main.java) |
+| 767 | [Prime Number of Set Bits in Binary Representation](https://leetcode.com/problems/prime-number-of-set-bits-in-binary-representation/) | Easy | Bit Manipulation | [Java](prime-number-of-set-bits-in-binary-representation/src/Main.java) |
+| 899 | [Binary Gap](https://leetcode.com/problems/binary-gap/) | Easy | Bit Manipulation | [Java](binary-gap/src/Main.java) |
 | 940 | [Fruit Into Baskets](https://leetcode.com/problems/fruit-into-baskets/) | Medium | Sliding Window | [Java](fruit-into-baskets/src/Main.java) |
 | 1046 | [Max Consecutive Ones III](https://leetcode.com/problems/max-consecutive-ones-iii/) | Medium | Sliding Window | [Java](max-consecutive-ones-iii/src/Main.java) |
+| 1460 | [Number of Substrings Containing All Three Characters](https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/) | Medium | Sliding Window | [Java](number-of-substrings-containing-all-three-characters/src/Main.java) |
 | 1567 | [Maximum Number of Vowels in a Substring of Given Length](https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/) | Medium | Sliding Window | [Java](maximum-number-of-vowels-in-a-substring-of-given-length/src/Main.java) |
 
 ## Decision Framework
@@ -54,17 +57,24 @@ Before solving any problem, ask yourself:
 
 ```
 train-leet-code/
+├── hooks/
+│   └── pre-commit           # Auto-updates README.md & studyplan.md on commit
 ├── problem-name/
 │   └── src/
 │       └── Main.java        # Solution + test cases
 ├── fetch-leetcode.py         # Fetch problem details from LeetCode API
 ├── new-problem.sh            # Scaffold a new problem directory
+├── update-progress.py        # Progress tracker (called by pre-commit hook)
 └── studyplan.md              # Full 19-week study plan
 ```
 
 ## Getting Started
 
 ```bash
+# After cloning, run setup
+git config core.hooksPath hooks/
+git config alias.push-lc '!./gpush'
+
 # Create a new problem
 ./new-problem.sh <problem-name>
 

@@ -1,0 +1,8 @@
+#!/bin/sh
+# Pre-commit hook: auto-update README.md and studyplan.md progress
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
+python3 "$REPO_ROOT/update-progress.py" || exit 1
+
+git add "$REPO_ROOT/README.md" "$REPO_ROOT/studyplan.md" "$REPO_ROOT/.problem-cache.json"

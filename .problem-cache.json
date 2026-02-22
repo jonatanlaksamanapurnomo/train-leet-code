@@ -9,6 +9,13 @@
       "Simulation"
     ]
   },
+  "binary-gap": {
+    "difficulty": "Easy",
+    "pattern": "Bit Manipulation",
+    "topicTags": [
+      "Bit Manipulation"
+    ]
+  },
   "binary-number-with-alternating-bits": {
     "difficulty": "Easy",
     "pattern": "Bit Manipulation",
@@ -102,6 +109,23 @@
       "Binary Search",
       "Sliding Window",
       "Prefix Sum"
+    ]
+  },
+  "number-of-substrings-containing-all-three-characters": {
+    "difficulty": "Medium",
+    "pattern": "Sliding Window",
+    "topicTags": [
+      "Hash Table",
+      "String",
+      "Sliding Window"
+    ]
+  },
+  "prime-number-of-set-bits-in-binary-representation": {
+    "difficulty": "Easy",
+    "pattern": "Bit Manipulation",
+    "topicTags": [
+      "Math",
+      "Bit Manipulation"
     ]
   },
   "reverse-bits": {
