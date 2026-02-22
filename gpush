@@ -1,0 +1,152 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
+POSTS_DIR="$REPO_ROOT/.posts"
+CACHE_FILE="$REPO_ROOT/.problem-cache.json"
+
+mkdir -p "$POSTS_DIR"
+
+# --- 1. Save current remote HEAD before pushing ---
+REMOTE="origin"
+BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+OLD_HEAD="$(git rev-parse "$REMOTE/$BRANCH" 2>/dev/null || echo "")"
+
+# --- 2. Run git push ---
+echo "Pushing to $REMOTE/$BRANCH..."
+git push "$@"
+echo ""
+
+# --- 3. Determine new commits ---
+NEW_HEAD="$(git rev-parse "$REMOTE/$BRANCH")"
+
+if [ -z "$OLD_HEAD" ]; then
+    # New branch — use all commits
+    DIFF_RANGE="$NEW_HEAD"
+    NEW_FILES="$(git diff-tree --no-commit-id -r --name-only --diff-filter=A "$NEW_HEAD" | grep '/src/Main\.java$' || true)"
+else
+    if [ "$OLD_HEAD" = "$NEW_HEAD" ]; then
+        echo "No new commits pushed."
+        exit 0
+    fi
+    NEW_FILES="$(git diff --name-only --diff-filter=A "$OLD_HEAD" "$NEW_HEAD" | grep '/src/Main\.java$' || true)"
+fi
+
+if [ -z "$NEW_FILES" ]; then
+    echo "No new solutions detected."
+    exit 0
+fi
+
+echo "New solutions detected:"
+echo "$NEW_FILES"
+echo ""
+
+# --- 4. Process each new solution ---
+while IFS= read -r file; do
+    SLUG="$(echo "$file" | cut -d'/' -f1)"
+    JAVA_PATH="$REPO_ROOT/$file"
+
+    echo "=== Processing: $SLUG ==="
+
+    # Read Java code
+    JAVA_CODE="$(cat "$JAVA_PATH")"
+
+    # Get metadata from cache
+    DIFFICULTY=""
+    PATTERN=""
+    TAGS=""
+    if [ -f "$CACHE_FILE" ]; then
+        DIFFICULTY="$(python3 -c "import json,sys; d=json.load(open('$CACHE_FILE')); e=d.get('$SLUG',{}); print(e.get('difficulty',''))" 2>/dev/null || echo "")"
+        PATTERN="$(python3 -c "import json,sys; d=json.load(open('$CACHE_FILE')); e=d.get('$SLUG',{}); print(e.get('pattern',''))" 2>/dev/null || echo "")"
+        TAGS="$(python3 -c "import json,sys; d=json.load(open('$CACHE_FILE')); e=d.get('$SLUG',{}); print(', '.join(e.get('topicTags',[])))" 2>/dev/null || echo "")"
+    fi
+
+    META_BLOCK=""
+    [ -n "$DIFFICULTY" ] && META_BLOCK="${META_BLOCK}Difficulty: $DIFFICULTY\n"
+    [ -n "$PATTERN" ] && META_BLOCK="${META_BLOCK}Pattern: $PATTERN\n"
+    [ -n "$TAGS" ] && META_BLOCK="${META_BLOCK}Topic Tags: $TAGS\n"
+
+    # --- 5. Generate post content via claude -p ---
+    PROMPT="You are writing a LeetCode solution post in English for the problem \"$SLUG\".
+
+Problem metadata:
+$(echo -e "$META_BLOCK")
+Here is the Java solution code (skip the Main class / test harness — focus only on the Solution class):
+
+\`\`\`java
+$JAVA_CODE
+\`\`\`
+
+Generate a LeetCode solution post with EXACTLY this format (no deviation):
+
+Line 1: The post title — a concise summary like: Java | <Pattern/Approach> | O(n) <brief technique>
+(Do NOT include any heading markers like # in the title line)
+
+Then a blank line, then the markdown body:
+
+## Intuition
+A 1-2 sentence explanation of the key insight.
+
+## Approach
+A concise numbered-step explanation of the algorithm. Keep it short (3-6 steps).
+
+## Complexity
+- **Time complexity:** O(...)
+- **Space complexity:** O(...)
+
+## Code
+\`\`\`java
+<paste ONLY the Solution class here, no test harness>
+\`\`\`
+
+IMPORTANT:
+- The very first line of your output must be the plain-text title (no # prefix).
+- Write for an audience that already understands the problem.
+- Be concise. No filler."
+
+    echo "Generating post with Claude..."
+    CLAUDE_OUTPUT="$(claude -p "$PROMPT" 2>/dev/null)" || {
+        echo "ERROR: claude -p failed for $SLUG. Skipping."
+        continue
+    }
+
+    # Parse title (first non-empty line) and content (rest)
+    TITLE="$(echo "$CLAUDE_OUTPUT" | awk 'NF{print;exit}')"
+    CONTENT="$(echo "$CLAUDE_OUTPUT" | awk 'BEGIN{found=0} NF&&!found{found=1;next} found{print}')"
+    # Strip leading blank lines from content
+    CONTENT="$(echo "$CONTENT" | awk 'NF{p=1} p{print}')"
+
+    # Strip leading # from title if Claude added one anyway
+    TITLE="$(echo "$TITLE" | sed 's/^#[# ]*//')"
+
+    # Save backup
+    POST_FILE="$POSTS_DIR/$SLUG.md"
+    {
+        echo "# $TITLE"
+        echo ""
+        echo "$CONTENT"
+    } > "$POST_FILE"
+    echo "Saved post to $POST_FILE"
+
+    # Preview
+    echo ""
+    echo "--- Post Preview ---"
+    echo "Title: $TITLE"
+    echo ""
+    echo "$CONTENT" | head -20
+    echo "..."
+    echo "--- End Preview ---"
+    echo ""
+
+    # --- 6. Post to LeetCode ---
+    echo "Posting to LeetCode..."
+    python3 "$REPO_ROOT/post-to-leetcode.py" "$SLUG" "$TITLE" "$CONTENT" && {
+        echo "Successfully posted solution for $SLUG!"
+    } || {
+        echo "ERROR: Failed to post $SLUG to LeetCode. Post saved locally at $POST_FILE"
+    }
+
+    echo ""
+done <<< "$NEW_FILES"
+
+echo "Done."

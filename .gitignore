@@ -29,5 +29,8 @@ __pycache__/
 .venv/
 venv/
 
+# Environment
+.env
+
 # Claude
 .claude/
