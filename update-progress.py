@@ -281,109 +281,92 @@ def make_progress_bar(solved, total, width=10):
     return "\u2588" * filled + "\u2591" * (width - filled)
 
 
+def _generate_progress_block(solutions, phase_counts, total_all):
+    """Generate the progress section content (between markers)."""
+    lines = []
+    lines.append(f"## Progress: {len(solutions)} / {total_all} solved\n")
+    lines.append("\n")
+    lines.append("```\n")
+    for pnum in sorted(PHASE_LABELS.keys()):
+        label = PHASE_LABELS[pnum]
+        s, t = phase_counts.get(pnum, (0, 0))
+        bar = make_progress_bar(s, t)
+        lines.append(f"Phase {pnum:<2} {label:<22}{bar}  {s}/{t}\n")
+    lines.append("```\n")
+    return lines
+
+
+def _generate_solutions_block(solutions, problem_meta):
+    """Generate the solutions table content (between markers)."""
+    lines = []
+    lines.append("## Solutions\n")
+    lines.append("\n")
+    lines.append("| # | Problem | Difficulty | Pattern | Solution |\n")
+    lines.append("|---|---------|------------|---------|----------|\n")
+    entries = []
+    for slug, sol in solutions.items():
+        meta = problem_meta.get(slug, {})
+        entries.append(
+            {
+                "number": sol["number"],
+                "title": sol["title"],
+                "url": sol["url"],
+                "difficulty": meta.get("difficulty", ""),
+                "pattern": meta.get("pattern", ""),
+                "dir": sol["dir"],
+            }
+        )
+    entries.sort(key=lambda e: e["number"])
+    for e in entries:
+        lines.append(
+            f"| {e['number']} | [{e['title']}]({e['url']}) "
+            f"| {e['difficulty']} | {e['pattern']} "
+            f"| [Java]({e['dir']}/src/Main.java) |\n"
+        )
+    return lines
+
+
 def update_readme(solutions, problem_meta, phase_counts, total_solved, total_all):
-    """Update README.md progress section and solutions table."""
+    """Update README.md progress section and solutions table.
+
+    Only content between <!-- PROGRESS-START/END --> and
+    <!-- SOLUTIONS-START/END --> markers is replaced.
+    Everything else is preserved exactly as-is.
+    """
     with open(README) as f:
-        lines = f.readlines()
+        content = f.read()
 
-    new_lines = []
-    state = "normal"
-    progress_block_done = False
+    PROG_START = "<!-- PROGRESS-START -->"
+    PROG_END = "<!-- PROGRESS-END -->"
+    SOL_START = "<!-- SOLUTIONS-START -->"
+    SOL_END = "<!-- SOLUTIONS-END -->"
 
-    i = 0
-    while i < len(lines):
-        line = lines[i]
+    # Replace progress section
+    ps = content.find(PROG_START)
+    pe = content.find(PROG_END)
+    if ps != -1 and pe != -1:
+        new_progress = "".join(_generate_progress_block(solutions, phase_counts, total_all))
+        content = (
+            content[: ps + len(PROG_START)]
+            + "\n"
+            + new_progress
+            + content[pe:]
+        )
 
-        # --- State: skipping old progress bar lines ---
-        if state == "skip_progress_bars":
-            if line.strip() == "```":
-                # Write new bars then closing ```
-                for pnum in sorted(PHASE_LABELS.keys()):
-                    label = PHASE_LABELS[pnum]
-                    s, t = phase_counts.get(pnum, (0, 0))
-                    bar = make_progress_bar(s, t)
-                    new_lines.append(
-                        f"Phase {pnum:<2} {label:<22}{bar}  {s}/{t}\n"
-                    )
-                new_lines.append("```\n")
-                state = "normal"
-            i += 1
-            continue
-
-        # --- State: skipping old solutions table rows ---
-        if state == "skip_table":
-            if line.startswith("|"):
-                i += 1
-                continue
-            state = "normal"
-            # Fall through to process this line normally
-
-        # --- Normal state ---
-        # Update progress header
-        if line.startswith("## Progress:"):
-            new_lines.append(
-                f"## Progress: {len(solutions)} / {total_all} solved\n"
-            )
-            i += 1
-            continue
-
-        # Detect progress bars code block
-        if (
-            line.strip() == "```"
-            and not progress_block_done
-            and any(
-                "Progress" in lines[j] for j in range(max(0, i - 3), i)
-            )
-        ):
-            new_lines.append("```\n")
-            progress_block_done = True
-            state = "skip_progress_bars"
-            i += 1
-            continue
-
-        # Replace solutions table
-        if line.startswith("## Solutions"):
-            new_lines.append(line)
-            i += 1
-            # Preserve blank line after heading
-            if i < len(lines) and lines[i].strip() == "":
-                new_lines.append(lines[i])
-                i += 1
-            # Write new table
-            new_lines.append(
-                "| # | Problem | Difficulty | Pattern | Solution |\n"
-            )
-            new_lines.append(
-                "|---|---------|------------|---------|----------|\n"
-            )
-            entries = []
-            for slug, sol in solutions.items():
-                meta = problem_meta.get(slug, {})
-                entries.append(
-                    {
-                        "number": sol["number"],
-                        "title": sol["title"],
-                        "url": sol["url"],
-                        "difficulty": meta.get("difficulty", ""),
-                        "pattern": meta.get("pattern", ""),
-                        "dir": sol["dir"],
-                    }
-                )
-            entries.sort(key=lambda e: e["number"])
-            for e in entries:
-                new_lines.append(
-                    f"| {e['number']} | [{e['title']}]({e['url']}) "
-                    f"| {e['difficulty']} | {e['pattern']} "
-                    f"| [Java]({e['dir']}/src/Main.java) |\n"
-                )
-            state = "skip_table"
-            continue
-
-        new_lines.append(line)
-        i += 1
+    # Replace solutions section
+    ss = content.find(SOL_START)
+    se = content.find(SOL_END)
+    if ss != -1 and se != -1:
+        new_solutions = "".join(_generate_solutions_block(solutions, problem_meta))
+        content = (
+            content[: ss + len(SOL_START)]
+            + "\n"
+            + new_solutions
+            + content[se:]
+        )
 
     with open(README, "w") as f:
-        f.writelines(new_lines)
+        f.write(content)
 
 
 def main():

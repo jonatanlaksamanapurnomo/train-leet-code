@@ -5,6 +5,7 @@ My journey solving 81 LeetCode problems, organized by pattern and topic — not 
 > **Philosophy:** Understand *why* an approach works, not memorize solutions.
 > For every problem, ask: "Is it monotonic or not? Why?"
 
+<!-- PROGRESS-START -->
 ## Progress: 16 / 81 solved
 
 ```
@@ -20,7 +21,9 @@ Phase 9  Backtracking          ░░░░░░░░░░  0/5
 Phase 10 Heap / Priority Queue ░░░░░░░░░░  0/4
 Phase 11 Advanced (UF/Trie)    ░░░░░░░░░░  0/10
 ```
+<!-- PROGRESS-END -->
 
+<!-- SOLUTIONS-START -->
 ## Solutions
 
 | # | Problem | Difficulty | Pattern | Solution |
@@ -41,6 +44,7 @@ Phase 11 Advanced (UF/Trie)    ░░░░░░░░░░  0/10
 | 1046 | [Max Consecutive Ones III](https://leetcode.com/problems/max-consecutive-ones-iii/) | Medium | Sliding Window | [Java](max-consecutive-ones-iii/src/Main.java) |
 | 1460 | [Number of Substrings Containing All Three Characters](https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/) | Medium | Sliding Window | [Java](number-of-substrings-containing-all-three-characters/src/Main.java) |
 | 1567 | [Maximum Number of Vowels in a Substring of Given Length](https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/) | Medium | Sliding Window | [Java](maximum-number-of-vowels-in-a-substring-of-given-length/src/Main.java) |
+<!-- SOLUTIONS-END -->
 
 ## Decision Framework
 
