@@ -2,8 +2,6 @@
 // https://leetcode.com/problems/binary-gap/
 
 
-
-
 class Solution {
     public int binaryGap(int n) {
         int resp =0;
