@@ -31,6 +31,17 @@
       "Bit Manipulation"
     ]
   },
+  "check-if-a-string-contains-all-binary-codes-of-size-k": {
+    "difficulty": "Medium",
+    "pattern": "Bit Manipulation",
+    "topicTags": [
+      "Hash Table",
+      "String",
+      "Bit Manipulation",
+      "Rolling Hash",
+      "Hash Function"
+    ]
+  },
   "contains-duplicate-ii": {
     "difficulty": "Easy",
     "pattern": "Sliding Window",
