@@ -6,11 +6,11 @@ My journey solving 81 LeetCode problems, organized by pattern and topic — not 
 > For every problem, ask: "Is it monotonic or not? Why?"
 
 <!-- PROGRESS-START -->
-## Progress: 17 / 81 solved
+## Progress: 18 / 81 solved
 
 ```
 Phase 1  Sliding Window        ██████████  9/9
-Phase 2  Prefix Sum + HashMap  ░░░░░░░░░░  0/7
+Phase 2  Prefix Sum + HashMap  █░░░░░░░░░  1/7
 Phase 3  Two Pointers          ░░░░░░░░░░  0/4
 Phase 4  Monotonic Stack       ░░░░░░░░░░  0/4
 Phase 5  Binary Search         ░░░░░░░░░░  0/5
@@ -35,6 +35,7 @@ Phase 11 Advanced (UF/Trie)    ░░░░░░░░░░  0/10
 | 219 | [Contains Duplicate II](https://leetcode.com/problems/contains-duplicate-ii/) | Easy | Sliding Window | [Java](contains-duplicate-ii/src/Main.java) |
 | 401 | [Binary Watch](https://leetcode.com/problems/binary-watch/) | Easy | Backtracking | [Java](binary-watch/src/Main.java) |
 | 424 | [Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/) | Medium | Sliding Window | [Java](longest-repeating-character-replacement/src/Main.java) |
+| 560 | [Subarray Sum Equals K](https://leetcode.com/problems/subarray-sum-equals-k/) | Medium | Prefix Sum | [Java](subarray-sum-equals-k/src/Main.java) |
 | 643 | [Maximum Average Subarray I](https://leetcode.com/problems/maximum-average-subarray-i/) | Easy | Sliding Window | [Java](maximum-average-subarray-i/src/Main.java) |
 | 693 | [Binary Number with Alternating Bits](https://leetcode.com/problems/binary-number-with-alternating-bits/) | Easy | Bit Manipulation | [Java](binary-number-with-alternating-bits/src/Main.java) |
 | 696 | [Count Binary Substrings](https://leetcode.com/problems/count-binary-substrings/) | Easy | Two Pointers | [Java](count-binary-substrings/src/Main.java) |

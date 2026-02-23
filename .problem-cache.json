@@ -146,5 +146,14 @@
       "Divide and Conquer",
       "Bit Manipulation"
     ]
+  },
+  "subarray-sum-equals-k": {
+    "difficulty": "Medium",
+    "pattern": "Prefix Sum",
+    "topicTags": [
+      "Array",
+      "Hash Table",
+      "Prefix Sum"
+    ]
   }
 }

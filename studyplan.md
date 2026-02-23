@@ -62,7 +62,7 @@ Pahami kenapa sliding window gagal di sini, dan kenapa prefix works.
 
 **Prinsip inti:** Jika `prefix[j] - prefix[i] = target`, maka subarray `i+1..j` punya sum = target.
 
-- [ ] **560. Subarray Sum Equals K** (Medium) — klasik prefix sum + hashmap
+- [x] **560. Subarray Sum Equals K** (Medium) — klasik prefix sum + hashmap
 - [ ] **974. Subarray Sums Divisible by K** (Medium) — prefix sum + modulo trick
 - [ ] **525. Contiguous Array** (Medium) — 0 dan 1 sama jumlahnya → track selisih count
 
@@ -320,7 +320,7 @@ Untuk setiap soal, **jangan langsung code**. Ikuti flow ini:
 |-------|-------|------|---------|
 | 1 | Sliding Window (Fixed) | 3 | 3/3 |
 | 1 | Sliding Window (Dynamic) | 6 | 6/6 |
-| 2 | Prefix Sum Basic | 3 | 0/3 |
+| 2 | Prefix Sum Basic | 3 | 1/3 |
 | 2 | Prefix Sum Advanced | 4 | 0/4 |
 | 3 | Two Pointers | 4 | 0/4 |
 | 4 | Monotonic Stack | 4 | 0/4 |
@@ -337,7 +337,7 @@ Untuk setiap soal, **jangan langsung code**. Ikuti flow ini:
 | 11 | Union Find | 3 | 0/3 |
 | 11 | Trie | 3 | 0/3 |
 | 11 | Bit & Math | 4 | 0/4 |
-| **Total** | | **81** | **9/81** |
+| **Total** | | **81** | **10/81** |
 
 ---
 
