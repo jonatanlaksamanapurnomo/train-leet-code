@@ -147,6 +147,16 @@
       "Bit Manipulation"
     ]
   },
+  "sort-integers-by-the-number-of-1-bits": {
+    "difficulty": "Easy",
+    "pattern": "Bit Manipulation",
+    "topicTags": [
+      "Array",
+      "Bit Manipulation",
+      "Sorting",
+      "Counting"
+    ]
+  },
   "subarray-sum-equals-k": {
     "difficulty": "Medium",
     "pattern": "Prefix Sum",
