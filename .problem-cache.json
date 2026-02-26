@@ -122,6 +122,15 @@
       "Prefix Sum"
     ]
   },
+  "number-of-steps-to-reduce-a-number-in-binary-representation-to-one": {
+    "difficulty": "Medium",
+    "pattern": "Bit Manipulation",
+    "topicTags": [
+      "String",
+      "Bit Manipulation",
+      "Simulation"
+    ]
+  },
   "number-of-substrings-containing-all-three-characters": {
     "difficulty": "Medium",
     "pattern": "Sliding Window",
