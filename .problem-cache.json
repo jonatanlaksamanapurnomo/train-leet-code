@@ -140,6 +140,14 @@
       "Sliding Window"
     ]
   },
+  "partitioning-into-minimum-number-of-deci-binary-numbers": {
+    "difficulty": "Medium",
+    "pattern": "",
+    "topicTags": [
+      "String",
+      "Greedy"
+    ]
+  },
   "prime-number-of-set-bits-in-binary-representation": {
     "difficulty": "Easy",
     "pattern": "Bit Manipulation",

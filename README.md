@@ -6,7 +6,7 @@ My journey solving 81 LeetCode problems, organized by pattern and topic — not 
 > For every problem, ask: "Is it monotonic or not? Why?"
 
 <!-- PROGRESS-START -->
-## Progress: 19 / 81 solved
+## Progress: 20 / 81 solved
 
 ```
 Phase 1  Sliding Window        ██████████  9/9
@@ -47,6 +47,7 @@ Phase 11 Advanced (UF/Trie)    ░░░░░░░░░░  0/10
 | 1460 | [Number of Substrings Containing All Three Characters](https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/) | Medium | Sliding Window | [Java](number-of-substrings-containing-all-three-characters/src/Main.java) |
 | 1557 | [Check If a String Contains All Binary Codes of Size K](https://leetcode.com/problems/check-if-a-string-contains-all-binary-codes-of-size-k/) | Medium | Bit Manipulation | [Java](check-if-a-string-contains-all-binary-codes-of-size-k/src/Main.java) |
 | 1567 | [Maximum Number of Vowels in a Substring of Given Length](https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/) | Medium | Sliding Window | [Java](maximum-number-of-vowels-in-a-substring-of-given-length/src/Main.java) |
+| 1807 | [Partitioning Into Minimum Number Of Deci-Binary Numbers](https://leetcode.com/problems/partitioning-into-minimum-number-of-deci-binary-numbers/) | Medium |  | [Java](partitioning-into-minimum-number-of-deci-binary-numbers/src/Main.java) |
 <!-- SOLUTIONS-END -->
 
 ## Decision Framework
