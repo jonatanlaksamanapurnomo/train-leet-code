@@ -6,7 +6,7 @@ My journey solving 81 LeetCode problems, organized by pattern and topic — not 
 > For every problem, ask: "Is it monotonic or not? Why?"
 
 <!-- PROGRESS-START -->
-## Progress: 20 / 81 solved
+## Progress: 21 / 81 solved
 
 ```
 Phase 1  Sliding Window        ██████████  9/9
@@ -45,6 +45,7 @@ Phase 11 Advanced (UF/Trie)    ░░░░░░░░░░  0/10
 | 1046 | [Max Consecutive Ones III](https://leetcode.com/problems/max-consecutive-ones-iii/) | Medium | Sliding Window | [Java](max-consecutive-ones-iii/src/Main.java) |
 | 1458 | [Sort Integers by The Number of 1 Bits](https://leetcode.com/problems/sort-integers-by-the-number-of-1-bits/) | Easy | Bit Manipulation | [Java](sort-integers-by-the-number-of-1-bits/src/Main.java) |
 | 1460 | [Number of Substrings Containing All Three Characters](https://leetcode.com/problems/number-of-substrings-containing-all-three-characters/) | Medium | Sliding Window | [Java](number-of-substrings-containing-all-three-characters/src/Main.java) |
+| 1520 | [Number of Steps to Reduce a Number in Binary Representation to One](https://leetcode.com/problems/number-of-steps-to-reduce-a-number-in-binary-representation-to-one/) | Medium | Bit Manipulation | [Java](number-of-steps-to-reduce-a-number-in-binary-representation-to-one/src/Main.java) |
 | 1557 | [Check If a String Contains All Binary Codes of Size K](https://leetcode.com/problems/check-if-a-string-contains-all-binary-codes-of-size-k/) | Medium | Bit Manipulation | [Java](check-if-a-string-contains-all-binary-codes-of-size-k/src/Main.java) |
 | 1567 | [Maximum Number of Vowels in a Substring of Given Length](https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/) | Medium | Sliding Window | [Java](maximum-number-of-vowels-in-a-substring-of-given-length/src/Main.java) |
 | 1807 | [Partitioning Into Minimum Number Of Deci-Binary Numbers](https://leetcode.com/problems/partitioning-into-minimum-number-of-deci-binary-numbers/) | Medium |  | [Java](partitioning-into-minimum-number-of-deci-binary-numbers/src/Main.java) |
@@ -72,7 +73,10 @@ train-leet-code/
 │       └── Main.java        # Solution + test cases
 ├── fetch-leetcode.py         # Fetch problem details from LeetCode API
 ├── new-problem.sh            # Scaffold a new problem directory
+├── post-to-leetcode.py       # Post solution article to LeetCode Solutions tab
+├── submit-to-leetcode.py     # Submit solution code to LeetCode (like clicking Submit)
 ├── update-progress.py        # Progress tracker (called by pre-commit hook)
+├── gpush                     # git push + auto-generate & post solution article
 └── studyplan.md              # Full 19-week study plan
 ```
 
@@ -82,13 +86,26 @@ train-leet-code/
 # After cloning, run setup
 git config core.hooksPath hooks/
 git config alias.push-lc '!./gpush'
+git config alias.submit-lc '!./submit-to-leetcode.py'
+
+# Set up LeetCode credentials
+cp .env.example .env
+# Edit .env and fill in LEETCODE_SESSION and LEETCODE_CSRFTOKEN
+# (get these from browser DevTools → Application → Cookies → leetcode.com)
 
 # Create a new problem
 ./new-problem.sh <problem-name>
 
-# Run a solution
+# Run a solution locally
 cd <problem-name>
 javac src/Main.java -d out && java -cp out Main
+
+# Submit solution to LeetCode
+git submit-lc <problem-name>   # from repo root
+git submit-lc                  # from inside problem folder
+
+# Push + auto-post solution article
+git push-lc
 ```
 
 ## Study Plan
