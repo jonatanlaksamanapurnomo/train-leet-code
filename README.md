@@ -6,7 +6,7 @@ My journey solving 81 LeetCode problems, organized by pattern and topic — not 
 > For every problem, ask: "Is it monotonic or not? Why?"
 
 <!-- PROGRESS-START -->
-## Progress: 21 / 81 solved
+## Progress: 23 / 81 solved
 
 ```
 Phase 1  Sliding Window        ██████████  9/9
@@ -48,6 +48,8 @@ Phase 11 Advanced (UF/Trie)    ░░░░░░░░░░  0/10
 | 1520 | [Number of Steps to Reduce a Number in Binary Representation to One](https://leetcode.com/problems/number-of-steps-to-reduce-a-number-in-binary-representation-to-one/) | Medium | Bit Manipulation | [Java](number-of-steps-to-reduce-a-number-in-binary-representation-to-one/src/Main.java) |
 | 1557 | [Check If a String Contains All Binary Codes of Size K](https://leetcode.com/problems/check-if-a-string-contains-all-binary-codes-of-size-k/) | Medium | Bit Manipulation | [Java](check-if-a-string-contains-all-binary-codes-of-size-k/src/Main.java) |
 | 1567 | [Maximum Number of Vowels in a Substring of Given Length](https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/) | Medium | Sliding Window | [Java](maximum-number-of-vowels-in-a-substring-of-given-length/src/Main.java) |
+| 1658 | [Minimum Swaps to Arrange a Binary Grid](https://leetcode.com/problems/minimum-swaps-to-arrange-a-binary-grid/) | Medium |  | [Java](minimum-swaps-to-arrange-a-binary-grid/src/Main.java) |
+| 1704 | [Special Positions in a Binary Matrix](https://leetcode.com/problems/special-positions-in-a-binary-matrix/) | Easy |  | [Java](special-positions-in-a-binary-matrix/src/Main.java) |
 | 1807 | [Partitioning Into Minimum Number Of Deci-Binary Numbers](https://leetcode.com/problems/partitioning-into-minimum-number-of-deci-binary-numbers/) | Medium |  | [Java](partitioning-into-minimum-number-of-deci-binary-numbers/src/Main.java) |
 <!-- SOLUTIONS-END -->
 

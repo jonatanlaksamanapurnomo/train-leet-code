@@ -122,6 +122,15 @@
       "Prefix Sum"
     ]
   },
+  "minimum-swaps-to-arrange-a-binary-grid": {
+    "difficulty": "Medium",
+    "pattern": "",
+    "topicTags": [
+      "Array",
+      "Greedy",
+      "Matrix"
+    ]
+  },
   "number-of-steps-to-reduce-a-number-in-binary-representation-to-one": {
     "difficulty": "Medium",
     "pattern": "Bit Manipulation",
@@ -172,6 +181,14 @@
       "Bit Manipulation",
       "Sorting",
       "Counting"
+    ]
+  },
+  "special-positions-in-a-binary-matrix": {
+    "difficulty": "Easy",
+    "pattern": "",
+    "topicTags": [
+      "Array",
+      "Matrix"
     ]
   },
   "subarray-sum-equals-k": {
