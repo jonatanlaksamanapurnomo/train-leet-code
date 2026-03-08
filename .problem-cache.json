@@ -42,6 +42,13 @@
       "Hash Function"
     ]
   },
+  "check-if-binary-string-has-at-most-one-segment-of-ones": {
+    "difficulty": "Easy",
+    "pattern": "",
+    "topicTags": [
+      "String"
+    ]
+  },
   "contains-duplicate-ii": {
     "difficulty": "Easy",
     "pattern": "Sliding Window",
@@ -57,6 +64,16 @@
     "topicTags": [
       "Two Pointers",
       "String"
+    ]
+  },
+  "find-unique-binary-string": {
+    "difficulty": "Medium",
+    "pattern": "Backtracking",
+    "topicTags": [
+      "Array",
+      "Hash Table",
+      "String",
+      "Backtracking"
     ]
   },
   "fruit-into-baskets": {

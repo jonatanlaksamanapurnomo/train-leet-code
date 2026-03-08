@@ -6,7 +6,7 @@ My journey solving 81 LeetCode problems, organized by pattern and topic — not 
 > For every problem, ask: "Is it monotonic or not? Why?"
 
 <!-- PROGRESS-START -->
-## Progress: 23 / 81 solved
+## Progress: 25 / 81 solved
 
 ```
 Phase 1  Sliding Window        ██████████  9/9
@@ -51,6 +51,8 @@ Phase 11 Advanced (UF/Trie)    ░░░░░░░░░░  0/10
 | 1658 | [Minimum Swaps to Arrange a Binary Grid](https://leetcode.com/problems/minimum-swaps-to-arrange-a-binary-grid/) | Medium |  | [Java](minimum-swaps-to-arrange-a-binary-grid/src/Main.java) |
 | 1704 | [Special Positions in a Binary Matrix](https://leetcode.com/problems/special-positions-in-a-binary-matrix/) | Easy |  | [Java](special-positions-in-a-binary-matrix/src/Main.java) |
 | 1807 | [Partitioning Into Minimum Number Of Deci-Binary Numbers](https://leetcode.com/problems/partitioning-into-minimum-number-of-deci-binary-numbers/) | Medium |  | [Java](partitioning-into-minimum-number-of-deci-binary-numbers/src/Main.java) |
+| 1910 | [Check if Binary String Has at Most One Segment of Ones](https://leetcode.com/problems/check-if-binary-string-has-at-most-one-segment-of-ones/) | Easy |  | [Java](check-if-binary-string-has-at-most-one-segment-of-ones/src/Main.java) |
+| 2107 | [Find Unique Binary String](https://leetcode.com/problems/find-unique-binary-string/) | Medium | Backtracking | [Java](find-unique-binary-string/src/Main.java) |
 <!-- SOLUTIONS-END -->
 
 ## Decision Framework
